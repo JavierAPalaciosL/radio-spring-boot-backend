@@ -76,10 +76,5 @@ public class CountriesRest {
 
         return ResponseEntity.ok(new CountryRadioDTO(country, this.useCaseRadio.getStationByCodeCountryAndNameCity(country.getCountryCode(), country.getName(), (size != null)? Integer.parseInt(size) : 20)));
     }
-
-    @GetMapping("/sexo")
-    public String sexo(){
-        return useCaseState.urlImageState("Argentina", "Santa%20Fe");
-    }
-
+    
 }
