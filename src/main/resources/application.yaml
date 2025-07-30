@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: weatherapi
+  apiKeys:
+    weather: ${API_KEY_WEATHER}
+
+  profiles:
+    active: dev
+
+  server:
+    port: 8080
+
+  google:
+    oauth:
+      client-id: ${client-id}
+      client-secret: ${client-secret}
+      redirect-uri: ${redirect-uri}
