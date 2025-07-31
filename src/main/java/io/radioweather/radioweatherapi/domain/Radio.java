@@ -17,4 +17,8 @@ public class Radio {
     private String icon;
     private String tags;
     private int votes;
+    private double geoLat;
+    private double geoLong;
+    private double geoDistance;
+
 }

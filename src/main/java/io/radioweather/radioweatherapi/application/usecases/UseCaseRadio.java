@@ -21,4 +21,9 @@ public class UseCaseRadio implements GetStations {
         return radioAPIPort.getStationByCodeCountryAndNameCity(codeCountry, nameCity, limit);
     }
 
+    @Override
+    public List<Radio> getStationByCoords(double lat, double lon, int radius, int limit) {
+        return this.radioAPIPort.getStationByCoords(lat, lon, radius, limit);
+    }
+
 }

@@ -38,4 +38,27 @@ public class CityJPAAdapter implements CityJPAPort {
         return null;
     }
 
+    @Override
+    public List<io.radioweather.radioweatherapi.domain.City> findCityByCountryIso2AndStateCode(String countryIso2, String stateCode, int page, int size) {
+        Slice<City> citiesWithPagination = this.jpaRepositoryCities.findByStateAndCountryWithJoin(countryIso2, stateCode, PageRequest.of(page, size));
+
+        return citiesWithPagination.stream().map(city -> {return
+                new io.radioweather.radioweatherapi.domain.City(city.getName().stripTrailing(), city.getLatitude(), city.getLongitude(), city.getWikidataid().stripTrailing());
+        }
+        ).toList();
+    }
+
+    @Override
+    public long countCityByCountryIso2AndCodeState(String countryIso2, String codeState) {
+        return this.jpaRepositoryCities.countByStateAndCountryWithJoin(countryIso2, codeState);
+    }
+
+    @Override
+    public io.radioweather.radioweatherapi.domain.City findCityByCountryIso2AndCodeState(String countryIso2, String codeState, String cityName) {
+        City city = this.jpaRepositoryCities.findByCity(countryIso2, codeState, cityName);
+        return new io.radioweather.radioweatherapi.domain.City(city.getName().stripTrailing(), city.getLatitude(), city.getLongitude(), city.getWikidataid().stripTrailing());
+    }
+
+
+
 }

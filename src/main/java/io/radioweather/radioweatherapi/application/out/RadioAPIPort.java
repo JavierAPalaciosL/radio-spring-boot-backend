@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RadioAPIPort {
 
-    public List<Radio> getStationByCodeCountryAndNameCity(String codeCountry, String nameCity, int limit);
-
+    List<Radio> getStationByCodeCountryAndNameCity(String codeCountry, String nameCity, int limit);
+    List<Radio> getStationByCoords(double lat, double lon, int radius, int limit);
 
 }
