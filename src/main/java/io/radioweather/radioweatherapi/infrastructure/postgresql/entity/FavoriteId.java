@@ -13,17 +13,14 @@ import java.util.Objects;
 @Setter
 @Embeddable
 public class FavoriteId implements Serializable {
-    private static final long serialVersionUID = 7858359486516612161L;
-    @Column(name = "emailuser", nullable = false, length = 30)
-    private String emailuser;
 
-    @Column(name = "cityfavorite", nullable = false)
+    private String emailuser;
     private Integer cityfavorite;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         FavoriteId entity = (FavoriteId) o;
         return Objects.equals(this.emailuser, entity.emailuser) &&
                 Objects.equals(this.cityfavorite, entity.cityfavorite);

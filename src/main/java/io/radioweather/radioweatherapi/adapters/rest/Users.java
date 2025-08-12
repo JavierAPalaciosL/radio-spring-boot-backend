@@ -5,17 +5,18 @@ import io.radioweather.radioweatherapi.adapters.rest.dtos.UserInfoDTO;
 import io.radioweather.radioweatherapi.adapters.rest.dtos.UserLoginDTO;
 import io.radioweather.radioweatherapi.adapters.rest.dtos.UserRegisterDTO;
 import io.radioweather.radioweatherapi.application.out.UserJPAPort;
+import io.radioweather.radioweatherapi.application.usecases.UseCaseFavorites;
+import io.radioweather.radioweatherapi.application.usecases.UseCasesUsers;
+import io.radioweather.radioweatherapi.domain.Favorites;
 import io.radioweather.radioweatherapi.infrastructure.utils.JWTEngine;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,8 +25,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("v1/users")
 public class Users {
 
-    private UserJPAPort userJPAPort;
     private final RestTemplate restTemplate;
+    private final UseCasesUsers useCasesUsers;
+    private final UseCaseFavorites useCaseFavorites;
 
     @Value("${spring.google.oauth.client-id}")
     private String clientId;
@@ -34,26 +36,44 @@ public class Users {
     @Value("${spring.google.oauth.redirect-uri}")
     private String redirectUri;
 
-    public Users(UserJPAPort userJPAPort) {
-        this.userJPAPort = userJPAPort;
+    public Users(UseCasesUsers useCasesUsers, UseCaseFavorites useCaseFavorites) {
         this.restTemplate = new RestTemplate();
+        this.useCasesUsers = useCasesUsers;
+        this.useCaseFavorites = useCaseFavorites;
     }
 
-    @GetMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody io.radioweather.radioweatherapi.domain.Users users) {
-        io.radioweather.radioweatherapi.domain.Users userSave = this.userJPAPort.register(users);
-        return ResponseEntity.ok(new UserRegisterDTO(userSave.getEmail(), userSave.getName(), userSave.getFirstName(), JWTEngine.generateNewJWT(userSave.getEmail())));
+        io.radioweather.radioweatherapi.domain.Users userFound = this.useCasesUsers.register(users);
+        return ResponseEntity.ok(userFound);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
-        io.radioweather.radioweatherapi.domain.Users userFound = this.userJPAPort.login(userLoginDTO.email(), userLoginDTO.password());
+        return ResponseEntity.ok(this.useCasesUsers.login(userLoginDTO.email(),  userLoginDTO.password()));
+    }
 
-        if(userFound == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @GetMapping("/subject")
+    public ResponseEntity<?> getSubject() {
+        UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(this.useCasesUsers.getUserByEmail(auth.getPrincipal().toString()));
+    }
 
-        return ResponseEntity.ok(new UserRegisterDTO(userLoginDTO.email(), userFound.getName(), userFound.getFirstName(), JWTEngine.generateNewJWT(userLoginDTO.email())));
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getUser(@PathVariable("email") String email) {
+        return ResponseEntity.ok(this.useCasesUsers.getUserByEmail(email));
+    }
+
+    @GetMapping("/{email}/favorites")
+    public ResponseEntity<?> getFavorties(@PathVariable("email") String email) {
+
+        return ResponseEntity.ok(this.useCasesUsers.getUserByEmail(email));
+    }
+
+    @PostMapping("/{email}/favorites")
+    public ResponseEntity<?> addFavorite(@PathVariable("email") String email, @RequestBody Favorites favorites) {
+        favorites.setEmailUser(email);
+        return ResponseEntity.ok(this.useCaseFavorites.saveFavorite(favorites));
     }
 
     @GetMapping("/oauth")
@@ -96,15 +116,17 @@ public class Users {
         );
 
         UserInfoDTO profile = userInfoResp.getBody();
-        System.out.println("Email: " + profile.getEmail());
-        System.out.println("Picture: " + profile.getPicture());
-        System.out.println("Name: " + profile.getName());
 
         System.out.println(profile.toString());
 
+        io.radioweather.radioweatherapi.domain.Users userFound = this.useCasesUsers.register(new io.radioweather.radioweatherapi.domain.Users(profile.getEmail(), "", profile.getGiven_name(), profile.getFamily_name()));
+        if (userFound == null) {
+            userFound = this.useCasesUsers.findUserByEmail(profile.getEmail());
+        }
+
         String frontendUrl = UriComponentsBuilder
-                .fromHttpUrl("http://localhost:4200")
-                .queryParam("token", JWTEngine.generateNewJWT(profile.getEmail()))
+                .fromHttpUrl("http://localhost:4200/auth/google/callback")
+                .queryParam("token", JWTEngine.generateNewJWT(userFound.getEmail()))
                 .build()
                 .toUriString();
 

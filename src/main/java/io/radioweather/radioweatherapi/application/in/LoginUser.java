@@ -4,4 +4,5 @@ import io.radioweather.radioweatherapi.domain.Users;
 
 public interface LoginUser {
     public Users login(String email, String password);
+    public Users findUserByEmail(String email);
 }
