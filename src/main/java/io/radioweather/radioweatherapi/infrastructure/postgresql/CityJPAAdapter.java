@@ -56,6 +56,11 @@ public class CityJPAAdapter implements CityJPAPort {
     @Override
     public io.radioweather.radioweatherapi.domain.City findCityByCountryIso2AndCodeState(String countryIso2, String codeState, String cityName) {
         City city = this.jpaRepositoryCities.findByCity(countryIso2, codeState, cityName);
+
+        if(city == null) {
+            return null;
+        }
+
         return new io.radioweather.radioweatherapi.domain.City(city.getName().stripTrailing(), city.getLatitude(), city.getLongitude(), city.getWikidataid().stripTrailing());
     }
 
