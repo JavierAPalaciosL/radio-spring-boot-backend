@@ -1,8 +1,7 @@
 package io.radioweather.radioweatherapi.infrastructure.postgresql.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -11,6 +10,9 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "states")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class State {
     @Id
     @Column(name = "id", nullable = false)
