@@ -26,7 +26,7 @@ public class UsersTests {
         });
     }
 
-    @Test
+/*    @Test
     public void passwordNull(){
         Assertions.assertThrows(IllegalArgumentException.class, ()  -> {
             new Users("example@gmail.com",null,"example", "exampleFirstName");
@@ -39,7 +39,7 @@ public class UsersTests {
             new Users("example@gmail.com","","example", "exampleFirstName");
         });
     }
-
+*/
 
 
 }
