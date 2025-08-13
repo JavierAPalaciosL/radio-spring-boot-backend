@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("v1/countries")
@@ -63,7 +64,7 @@ public class CountriesRest {
                 country -> {
                     return new CountryRadioDTO(country, this.useCaseRadio.getStationByCodeCountryAndNameCity(country.getCountryCode(), country.getName(), (size != null)? Integer.parseInt(size) : 20));
                 }
-        ).filter(dto -> dto.getRadios() != null && !dto.getRadios().isEmpty()).toList();
+        ).filter(dto -> dto.getRadios() != null && !dto.getRadios().isEmpty()).collect(Collectors.toList());
 
         return ResponseEntity.ok(countryRadioDTOS);
 

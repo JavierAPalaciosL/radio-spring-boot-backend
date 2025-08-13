@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CountryJPAAdapter implements CountryJPAPort {
@@ -27,7 +28,7 @@ public class CountryJPAAdapter implements CountryJPAPort {
 
         return paginator.stream().map(city ->  {
             return new io.radioweather.radioweatherapi.domain.Country(city.getName().stripTrailing(), null, Double.parseDouble(city.getLatitude()), Double.parseDouble(city.getLongitude()), city.getIso3().replace(" ", ""), "state", city.getIso2().replace(" ", ""), city.getEmoji(), city.getEmojiu());
-        }).toList();
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -42,7 +43,7 @@ public class CountryJPAAdapter implements CountryJPAPort {
 
         return countries.stream().map(city ->  {
             return new io.radioweather.radioweatherapi.domain.Country(city.getNameCountries().stripTrailing(), null, Double.parseDouble(city.getLatitude()), Double.parseDouble(city.getLongitude()), city.getIso3().replace(" ", ""), "state", city.getIso2().replace(" ", ""), city.getEmoji().stripTrailing(), city.getEmojiu().stripTrailing());
-        }).toList();
+        }).collect(Collectors.toList());
     }
 
     @Override

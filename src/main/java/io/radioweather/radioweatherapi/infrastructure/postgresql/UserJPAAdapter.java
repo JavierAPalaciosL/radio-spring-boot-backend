@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserJPAAdapter implements UserJPAPort {
@@ -73,7 +74,7 @@ public class UserJPAAdapter implements UserJPAPort {
 
         User user = userFound.get();
 
-        return user.getFavorites().stream().map(favorite -> {return new Favorites(favorite.getEmailuser(), favorite.getCityfavorite(), Date.valueOf(favorite.getDateadd()));}).toList();
+        return user.getFavorites().stream().map(favorite -> {return new Favorites(favorite.getEmailuser(), favorite.getCityfavorite(), Date.valueOf(favorite.getDateadd()));}).collect(Collectors.toList());
     }
 
 }

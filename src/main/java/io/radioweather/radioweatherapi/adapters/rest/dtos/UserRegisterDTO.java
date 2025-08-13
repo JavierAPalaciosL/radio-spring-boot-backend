@@ -1,4 +1,15 @@
 package io.radioweather.radioweatherapi.adapters.rest.dtos;
 
-public record UserRegisterDTO(String email, String name, String firstName, String token) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserRegisterDTO {
+    private String email;
+    private String name;
+    private String firstName;
+    private String token;
 }

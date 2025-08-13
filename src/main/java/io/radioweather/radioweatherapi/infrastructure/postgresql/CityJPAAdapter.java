@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CityJPAAdapter implements CityJPAPort {
@@ -45,7 +46,7 @@ public class CityJPAAdapter implements CityJPAPort {
         return citiesWithPagination.stream().map(city -> {return
                 new io.radioweather.radioweatherapi.domain.City(city.getName().stripTrailing(), city.getLatitude(), city.getLongitude(), city.getWikidataid().stripTrailing());
         }
-        ).toList();
+        ).collect(Collectors.toList());
     }
 
     @Override

@@ -50,7 +50,7 @@ public class Users {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
-        return ResponseEntity.ok(this.useCasesUsers.login(userLoginDTO.email(),  userLoginDTO.password()));
+        return ResponseEntity.ok(this.useCasesUsers.login(userLoginDTO.getEmail(),  userLoginDTO.getPassword()));
     }
 
     @GetMapping("/subject")
@@ -105,7 +105,7 @@ public class Users {
 
         /*RECALL*/
         HttpHeaders headersProfile = new HttpHeaders();
-        headersProfile.setBearerAuth(tokens.accessToken());
+        headersProfile.setBearerAuth(tokens.getAccessToken());
         HttpEntity<Void> entity = new HttpEntity<>(headersProfile);
 
         ResponseEntity<UserInfoDTO> userInfoResp = restTemplate.exchange(
