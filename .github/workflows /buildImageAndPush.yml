@@ -1,7 +1,7 @@
 name: buildImageAndPush.yml
 on:
   push:
-    branches: [ feature/workflows ]
+    branches: [ main, feature/workflows ]
 
 jobs:
   build-jar:
