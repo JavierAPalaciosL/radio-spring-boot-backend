@@ -2,7 +2,9 @@ name: DeployToDocker.yml
 
 on:
   push:
-    branches: [ main, feature/* ]
+    branches:
+      - main
+      - feature/workflows
 
 jobs:
   build-jar:
