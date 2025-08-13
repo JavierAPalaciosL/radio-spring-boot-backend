@@ -1,8 +1,8 @@
 name: buildImageAndPush.yml
-
 on:
   push:
     branches: [ feature/workflows ]
+
 jobs:
   build-jar:
     runs-on: ubuntu-22.04
