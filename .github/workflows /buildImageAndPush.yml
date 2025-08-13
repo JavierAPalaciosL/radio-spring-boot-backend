@@ -1,11 +1,10 @@
-name: DeployToDocker.yml
+name: buildImageAndPush.yml
 
 on:
   push:
     branches:
       - main
-      - feature/workflows
-
+      - feature/**
 jobs:
   build-jar:
     runs-on: ubuntu-22.04
