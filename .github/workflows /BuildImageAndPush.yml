@@ -1,4 +1,4 @@
-name: buildImageAndPush.yml
+name: BuildImageAndPush.yml
 on:
   push:
     branches: [ main, feature/workflows ]
