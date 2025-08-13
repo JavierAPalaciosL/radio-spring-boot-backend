@@ -19,8 +19,6 @@ public class Users {
             throw new IllegalArgumentException("Email cannot be empty");
         }else if(password == null){
             throw new IllegalArgumentException("Password cannot be null");
-        }else if(password.isEmpty()){
-            throw new IllegalArgumentException("Password cannot be empty");
         }
 
         this.email = email;
@@ -62,8 +60,5 @@ public class Users {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
-
-
 
 }
