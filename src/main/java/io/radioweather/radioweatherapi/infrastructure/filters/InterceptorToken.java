@@ -1,11 +1,12 @@
 package io.radioweather.radioweatherapi.infrastructure.filters;
 import io.radioweather.radioweatherapi.infrastructure.utils.JWTEngine;
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Component
@@ -35,7 +36,7 @@ public class InterceptorToken implements Filter {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         filterChain.doFilter(servletRequest, servletResponse);
-    }
 
+    }
 
 }

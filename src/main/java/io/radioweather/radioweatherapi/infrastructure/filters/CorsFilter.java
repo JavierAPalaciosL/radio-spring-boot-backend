@@ -2,25 +2,18 @@ package io.radioweather.radioweatherapi.infrastructure.filters;
 
 import java.io.IOException;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class CorsFilter implements Filter {
-
+public class CorsFilter implements javax.servlet.Filter {
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-
-        if (response instanceof HttpServletResponse) {
-            HttpServletResponse res = (HttpServletResponse) response;
-            HttpServletRequest req = (HttpServletRequest) request;
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        if (servletResponse instanceof HttpServletResponse) {
+            HttpServletResponse res = (HttpServletResponse) servletResponse;
+            HttpServletRequest req = (HttpServletRequest) servletRequest;
 
             res.setHeader("Access-Control-Allow-Origin", "*");
             res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -32,8 +25,6 @@ public class CorsFilter implements Filter {
                 return;
             }
         }
-        chain.doFilter(request, response);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
-
-
 }

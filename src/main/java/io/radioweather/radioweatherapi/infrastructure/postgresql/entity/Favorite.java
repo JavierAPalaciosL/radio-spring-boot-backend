@@ -1,8 +1,8 @@
 package io.radioweather.radioweatherapi.infrastructure.postgresql.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data

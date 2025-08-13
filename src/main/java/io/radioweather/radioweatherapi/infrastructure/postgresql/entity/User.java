@@ -1,8 +1,8 @@
 package io.radioweather.radioweatherapi.infrastructure.postgresql.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
