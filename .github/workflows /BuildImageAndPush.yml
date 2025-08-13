@@ -2,9 +2,7 @@ name: BuildImageAndPush.yml
 
 on:
   push:
-    branches:
-      - main
-      - feature/workflows
+    branches: [ main ]
 
 jobs:
   build-jar:
