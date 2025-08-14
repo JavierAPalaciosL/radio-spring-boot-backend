@@ -125,7 +125,7 @@ public class Users {
         }
 
         String frontendUrl = UriComponentsBuilder
-                .fromHttpUrl("http://localhost:4200/auth/google/callback")
+                .fromHttpUrl("https://radio-api-backend-latest.onrender.com/auth/google/callback")
                 .queryParam("token", JWTEngine.generateNewJWT(userFound.getEmail()))
                 .build()
                 .toUriString();
