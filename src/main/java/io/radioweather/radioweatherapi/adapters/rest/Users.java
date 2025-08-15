@@ -35,6 +35,8 @@ public class Users {
     private String clientSecret;
     @Value("${spring.google.oauth.redirect-uri}")
     private String redirectUri;
+    @Value("${spring.host.url-frontend-listener}")
+    private String hostUrlFrontendListener;
 
     public Users(UseCasesUsers useCasesUsers, UseCaseFavorites useCaseFavorites) {
         this.restTemplate = new RestTemplate();
@@ -81,7 +83,6 @@ public class Users {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        System.out.println("code received: " + code);
 
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
 
@@ -101,9 +102,7 @@ public class Users {
                 );
 
         TokenResponseDTO tokens = response.getBody();
-        System.out.println(tokens.toString());
 
-        /*RECALL*/
         HttpHeaders headersProfile = new HttpHeaders();
         headersProfile.setBearerAuth(tokens.accessToken());
         HttpEntity<Void> entity = new HttpEntity<>(headersProfile);
@@ -117,15 +116,13 @@ public class Users {
 
         UserInfoDTO profile = userInfoResp.getBody();
 
-        System.out.println(profile.toString());
-
         io.radioweather.radioweatherapi.domain.Users userFound = this.useCasesUsers.register(new io.radioweather.radioweatherapi.domain.Users(profile.getEmail(), "", profile.getGiven_name(), profile.getFamily_name()));
         if (userFound == null) {
             userFound = this.useCasesUsers.findUserByEmail(profile.getEmail());
         }
 
         String frontendUrl = UriComponentsBuilder
-                .fromHttpUrl("https://radio-angular-frontend.onrender.com/auth/google/callback")
+                .fromHttpUrl(this.hostUrlFrontendListener)
                 .queryParam("token", JWTEngine.generateNewJWT(userFound.getEmail()))
                 .build()
                 .toUriString();
