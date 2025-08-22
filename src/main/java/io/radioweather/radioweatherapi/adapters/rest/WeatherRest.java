@@ -23,4 +23,6 @@ public class WeatherRest {
         return ResponseEntity.ok(this.useCaseCountries.getWeather(latitude, longitude));
     }
 
+
+
 }

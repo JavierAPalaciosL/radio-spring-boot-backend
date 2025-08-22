@@ -1,9 +1,6 @@
 package io.radioweather.radioweatherapi.adapters.rest;
 
-import io.radioweather.radioweatherapi.adapters.rest.dtos.TokenResponseDTO;
-import io.radioweather.radioweatherapi.adapters.rest.dtos.UserInfoDTO;
-import io.radioweather.radioweatherapi.adapters.rest.dtos.UserLoginDTO;
-import io.radioweather.radioweatherapi.adapters.rest.dtos.UserRegisterDTO;
+import io.radioweather.radioweatherapi.adapters.rest.dtos.*;
 import io.radioweather.radioweatherapi.application.out.UserJPAPort;
 import io.radioweather.radioweatherapi.application.usecases.UseCaseFavorites;
 import io.radioweather.radioweatherapi.application.usecases.UseCasesUsers;
@@ -47,12 +44,28 @@ public class Users {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody io.radioweather.radioweatherapi.domain.Users users) {
         io.radioweather.radioweatherapi.domain.Users userFound = this.useCasesUsers.register(users);
-        return ResponseEntity.ok(userFound);
+
+        if(userFound == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(new DeliverUserDataDTO(userFound.getEmail(), userFound.getName(), userFound.getFirstName(), JWTEngine.generateNewJWT(userFound.getEmail())));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
-        return ResponseEntity.ok(this.useCasesUsers.login(userLoginDTO.email(),  userLoginDTO.password()));
+
+        if(userLoginDTO.email() == null || userLoginDTO.password() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        io.radioweather.radioweatherapi.domain.Users users = this.useCasesUsers.login(userLoginDTO.email(),  userLoginDTO.password());
+
+        if(users == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(new DeliverUserDataDTO(users.getEmail(), users.getName(), users.getFirstName(), JWTEngine.generateNewJWT(users.getEmail())));
     }
 
     @GetMapping("/subject")
@@ -66,15 +79,17 @@ public class Users {
         return ResponseEntity.ok(this.useCasesUsers.getUserByEmail(email));
     }
 
-    @GetMapping("/{email}/favorites")
-    public ResponseEntity<?> getFavorties(@PathVariable("email") String email) {
-
-        return ResponseEntity.ok(this.useCasesUsers.getUserByEmail(email));
+    @GetMapping("/favorites")
+    public ResponseEntity<?> getFavorties() {
+        UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getPrincipal().toString();
+        io.radioweather.radioweatherapi.domain.Users userFound = this.useCasesUsers.getUserByEmail(email);
+        this.useCaseFavorites.getFavorites(null);
+        return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/{email}/favorites")
-    public ResponseEntity<?> addFavorite(@PathVariable("email") String email, @RequestBody Favorites favorites) {
-        favorites.setEmailUser(email);
+    @PostMapping("/favorites")
+    public ResponseEntity<?> addFavorite(@RequestBody Favorites favorites) {
         return ResponseEntity.ok(this.useCaseFavorites.saveFavorite(favorites));
     }
 

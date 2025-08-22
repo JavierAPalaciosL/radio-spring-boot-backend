@@ -11,7 +11,6 @@ public class Users {
     private String name;
     private String firstName;
 
-
     public Users(String email, String password, String name, String firstName) {
         if(email == null){
             throw new IllegalArgumentException("Email cannot be null");
@@ -59,6 +58,17 @@ public class Users {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                '}';
     }
 
 }

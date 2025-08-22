@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,16 +32,8 @@ public class FavoriteJPAAdapter implements FavoritesJPAPort {
     @Override
     public Favorites saveFavorite(Favorites favorites) {
 
-        System.out.println("*****************");
-        System.out.println(favorites.toString());
-
         Optional<User> userFound = this.jpaRepositoryUsers.findById(favorites.getEmailUser());
         Optional<City> cityFound = this.jpaRepositoryCities.findById(favorites.getIdCity());
-
-        System.out.println(userFound.get());
-        System.out.println(cityFound.get());
-
-        System.out.println("eenddddddddddddddddddddddddddddddd*");
 
         FavoriteId favoriteId = new FavoriteId();
         favoriteId.setCityfavorite(cityFound.get().getId());
@@ -54,5 +47,10 @@ public class FavoriteJPAAdapter implements FavoritesJPAPort {
                 .build());
 
         return new Favorites(favoriteSave.getEmailuser(), favoriteSave.getCityfavorite(), Date.valueOf(favoriteSave.getDateadd()));
+    }
+
+    @Override
+    public List<Favorites> getFavorites(String emailUser) {
+        return List.of();
     }
 }

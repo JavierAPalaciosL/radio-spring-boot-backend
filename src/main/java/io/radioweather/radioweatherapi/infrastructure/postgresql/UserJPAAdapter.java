@@ -35,7 +35,9 @@ public class UserJPAAdapter implements UserJPAPort {
     @Override
     public Users register(Users user) {
 
-        if (this.jpaRepositoryUsers.findByEmailAndPassword(user.getEmail(), user.getPassword()).isPresent()) {
+        Optional<User> userFound = this.jpaRepositoryUsers.findByEmail(user.getEmail());
+
+        if(userFound.isPresent()) {
             return null;
         }
 
