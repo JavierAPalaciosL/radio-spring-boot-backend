@@ -51,6 +51,12 @@ public class FavoriteJPAAdapter implements FavoritesJPAPort {
 
     @Override
     public List<Favorites> getFavorites(String emailUser) {
-        return List.of();
+
+        List<Favorite> favoritesUser = this.jpaRepositoryFavorites.findByEmailuser(emailUser);
+
+        return favoritesUser.stream().map(favorite -> {
+            return new Favorites(favorite.getEmailuser(), favorite.getCityfavorite(), Date.valueOf(favorite.getDateadd()));
+        }).toList();
+
     }
 }

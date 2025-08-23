@@ -19,12 +19,12 @@ public class UseCaseFavorites implements GetFavorites, SaveFavorite {
 
     @Override
     public Favorites saveFavorite(Favorites favorites) {
-        System.out.println("calling saveFavorite");
         return this.favoritesJPAPort.saveFavorite(favorites);
     }
 
     @Override
     public List<Favorites> getFavorites(Favorites favorites) {
-        return List.of();
+        return this.favoritesJPAPort.getFavorites(favorites.getEmailUser());
     }
+
 }

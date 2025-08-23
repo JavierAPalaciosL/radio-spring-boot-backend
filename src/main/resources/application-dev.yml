@@ -21,3 +21,6 @@ spring:
 
   host:
     url-frontend-listener: ${HOST_URL_FRONTEND_LISTENER}
+
+  JWT:
+    secret: ${KEY_JWT_SECRET}

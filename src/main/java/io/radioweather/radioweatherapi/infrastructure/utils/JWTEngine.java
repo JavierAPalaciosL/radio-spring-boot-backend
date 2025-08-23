@@ -4,11 +4,24 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
+@Component
 public class JWTEngine {
 
-    private static String secretKey = "mi_clave_secreta#q12412412122312312312d@1p2oiejojnwrjpo21nrp12ojkrp21nrjop31nfop31ojfmp3o1kjf2pnifepoqkfpiqweof";
+    @Value("${spring.JWT.secret}")
+    private String secretKey;
+
+    private static String SECRET_KEY;
+
+    @PostConstruct
+    public void init() {
+        SECRET_KEY = secretKey;
+    }
 
     private JWTEngine(){}
 
@@ -16,13 +29,13 @@ public class JWTEngine {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY.getBytes())
                 .compact();
     }
 
     public static Claims validateToken(String jwtToken) {
         JwtParser parser = Jwts.parser()
-                .setSigningKey(secretKey.getBytes())
+                .setSigningKey(SECRET_KEY.getBytes())
                 .build();
         Claims claims = parser.parseClaimsJws(jwtToken).getBody();
         return claims;
